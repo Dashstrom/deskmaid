@@ -1,0 +1,100 @@
+# OUTPUT dir of arranged file
+OUTPUT: "SELECT YOUR DIR HERE"
+
+# Exetnsion file to ignore on desktop
+IGNORE EXTENSIONS:
+- lnk
+- url
+- sys
+
+# File to ignore on desktop
+IGNORE FILES:
+  - cleaner.py
+
+# Where move file according to their extension
+GROUPS:
+  videos: 
+  - webm
+  - mov
+  - mp4
+  - avi
+  audios:
+  - wma
+  - mp3
+  - ogg
+  projects:
+  - ai
+  - xcf
+  - psd
+  excel:
+  - xlsx
+  - xls
+  - xlsm
+  - xlsm
+  - xlr
+  - xlc
+  - xltm
+  - xltx
+  images:
+  - png
+  - jpeg
+  - jpg
+  - svg
+  - ico
+  - gif
+  - bmp
+  - jpe
+  - webp
+  - jfif
+  archives:
+  - zip
+  - gz
+  - rar
+  - tar
+  powerpoint:
+  - pptx
+  documents:
+  - pdf
+  - odt
+  - docx
+  - doc
+  - latex
+  textes:
+  - txt
+  - log
+  codes:
+  - cpp
+  - psql
+  - asm
+  - kt
+  - css
+  - sql
+  - py
+  - java
+  - pyx
+  - c
+  - class
+  - sql
+  - jar
+  - html
+  - s
+  - sh
+  - bat
+  - cc
+  - cs
+  - htm
+  - h
+  - jav
+  - js
+  - ts
+  - php
+  executables:
+  - exe
+  data:
+  - sav
+  - json
+  - yaml
+  - yml
+  - dat
+  - xsd
+  - csv
