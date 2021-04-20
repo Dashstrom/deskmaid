@@ -134,8 +134,5 @@ def arrange_desktop() -> int:
 
 
 if __name__ == "__main__":
-    try:
-        arranged = arrange_desktop()
-        print(f"{arranged} files aranged")
-    except Exception:
-        print_exc()
+    arranged = arrange_desktop()
+    print(f"{arranged} files aranged")
