@@ -136,8 +136,6 @@ def arrange_desktop() -> int:
 if __name__ == "__main__":
     try:
         arranged = arrange_desktop()
-        print(f"{arranged} fichiers triés")
+        print(f"{arranged} files aranged")
     except Exception:
         print_exc()
-    finally:
-        input("Fin du script, appuyer sur entrer pour terminer\n")
