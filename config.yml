@@ -1,7 +1,7 @@
 # OUTPUT dir of arranged file
 OUTPUT: "SELECT YOUR DIR HERE"
 
-# Exetnsion file to ignore on desktop
+# Extension file to ignore on desktop
 IGNORE EXTENSIONS:
 - lnk
 - url
