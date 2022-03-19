@@ -1,0 +1,140 @@
+# OUTPUT dir of arranged file
+INPUT: "C:/Users/Dashstrom/Desktop"
+OUTPUT: "E:/Fichiers"
+
+# Extension file to ignore on desktop
+IGNORE EXTENSIONS:
+- lnk
+- url
+- sys
+- bat
+- ps1
+
+# File to ignore on desktop
+IGNORE FILES:
+  - cleaner.py
+
+# Where move file according to their extension
+GROUPS:
+  videos: 
+  - webm
+  - mov
+  - mp4
+  - mpeg
+  - avi
+  - wmv
+  - DivX
+  - MKV
+  - H264
+  - flv
+  audios:
+  - riff
+  - bwf
+  - raw
+  - caf
+  - aiff
+  - wav
+  - wma
+  - mp3
+  - ogg
+  projects:
+  - ai
+  - xcf
+  - psd
+  excel:
+  - xlsx
+  - xls
+  - xlsm
+  - xlsm
+  - xlr
+  - xlc
+  - xltm
+  - xltx
+  images:
+  - png
+  - jpeg
+  - jpg
+  - svg
+  - ico
+  - gif
+  - bmp
+  - jpe
+  - webp
+  - jfif
+  - heic
+  archives:
+  - tar.bz2
+  - tar.gz
+  - bz2
+  - rar
+  - gz
+  - tar
+  - tbz2
+  - tar
+  - zip
+  - xz
+  - 7z
+  - Z
+  - deb
+  - tgz
+  - whl
+  powerpoint:
+  - pptx
+  documents:
+  - pdf
+  - odt
+  - docx
+  - doc
+  - latex
+  textes:
+  - txt
+  - log
+  codes:
+  - cpp
+  - psql
+  - asm
+  - kt
+  - css
+  - sql
+  - py
+  - java
+  - pyx
+  - c
+  - cpp
+  - asm
+  - class
+  - sql
+  - pqsl
+  - html
+  - s
+  - sh
+  - bat
+  - cc
+  - cs
+  - htm
+  - h
+  - jav
+  - js
+  - ts
+  - php
+  executables:
+  - jar
+  - pyc
+  - msi
+  - exe
+  - iso
+  - bin
+  data:
+  - xml
+  - mbc
+  - tmx
+  - tsx
+  - pcap
+  - sav
+  - json
+  - yaml
+  - yml
+  - dat
+  - xsd
+  - csv
+  - crdownload
