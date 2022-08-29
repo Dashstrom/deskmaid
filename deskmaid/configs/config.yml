@@ -51,6 +51,7 @@ GROUPS:
   - xltm
   - xltx
   images:
+  - cur
   - png
   - jpeg
   - jpg
@@ -63,6 +64,8 @@ GROUPS:
   - jfif
   - heic
   archives:
+  - whl
+  - torrent
   - tar.bz2
   - tar.gz
   - bz2
@@ -123,8 +126,10 @@ GROUPS:
   - msi
   - exe
   - iso
+  - so
   - bin
   data:
+  - ics
   - xml
   - mbc
   - tmx
