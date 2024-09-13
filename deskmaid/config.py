@@ -5,7 +5,7 @@ import pathlib
 import re
 import shutil
 from pathlib import Path
-from typing import Any, Dict, Optional, Set, Type
+from typing import Any, Dict, Match, Optional, Set, Type
 
 from msgspec import Struct, field, json, yaml
 
@@ -29,7 +29,7 @@ class TemplateString:
     def render(self, **variables: Any) -> str:
         """Render the template with provided variables."""
 
-        def repl(match: re.Match[str]) -> str:
+        def repl(match: Match[str]) -> str:
             var = match["variable"]
             return (
                 match["before"] + str(variables.get(var, var)) + match["after"]
