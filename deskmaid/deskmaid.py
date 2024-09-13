@@ -14,7 +14,6 @@ from time import sleep
 from typing import IO, Dict, Optional
 
 from plyer import notification
-from win32com.client import CDispatch, Dispatch
 
 from .config import Config, Move
 from .file import PathLike, split_filename, to_path
@@ -194,6 +193,9 @@ class Deskmaid:
 
     def _create_desktop_shortcut_windows(self, *, debug: bool) -> None:
         """Create shortcut on windows."""
+        # Import API
+
+        from win32com.client import CDispatch, Dispatch
         # Get desktop path
         desktop = self.config.desktop.render()
 
