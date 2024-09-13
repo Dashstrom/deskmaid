@@ -175,7 +175,7 @@ sys.exit(
   subprocess.check_output(
       ['git', 'describe', '--tags', '--abbrev=0'],
       text=True,
-  )
+  ).strip()
   != 'v' + deskmaid.__version__
 )
 """
