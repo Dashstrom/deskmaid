@@ -173,7 +173,7 @@ help = "Check if the current tag match the version."
 expr = """
 sys.exit(
   subprocess.check_output(
-      ['git', 'describe', 'tag', '--abbrev=0'],
+      ['git', 'describe', '--tags', '--abbrev=0'],
       text=True,
   )
   != 'v' + deskmaid.__version__
