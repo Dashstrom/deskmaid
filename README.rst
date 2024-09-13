@@ -38,7 +38,9 @@ Deskmaid
 Description
 ###########
 
-Configurable desktop cleaner.
+Deskmaid is a configurable desktop cleaner.
+It scans your desktop and moves selected files to a folder, organizing them by file extension.
+Everything can be configured in :bash:`~/.config/deskmaid/config.yml`.
 
 Installation
 ############
