@@ -1,5 +1,5 @@
 desktop: "{home}/Desktop"
-storage: "D:/Files"
+storage: "{home}/Files"
 ignore:
   extensions:
     - lnk
