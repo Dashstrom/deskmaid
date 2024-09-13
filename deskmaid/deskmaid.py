@@ -196,6 +196,7 @@ class Deskmaid:
         # Import API
 
         from win32com.client import CDispatch, Dispatch
+
         # Get desktop path
         desktop = self.config.desktop.render()
 
