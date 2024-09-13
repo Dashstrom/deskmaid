@@ -1,0 +1,31 @@
+{
+  "recommendations": [
+    "aaron-bond.better-comments",
+    "benspaulding.python-manifest-template",
+    "charliermarsh.ruff",
+    "DavidAnson.vscode-markdownlint",
+    "EditorConfig.EditorConfig",
+    "github.vscode-github-actions",
+    "jebbs.plantuml",
+    "KevinRose.vsc-python-indent",
+    "matangover.mypy",
+    "ms-python.vscode-pylance",
+    "ms-python.python",
+    "njpwerner.autodocstring",
+    "redhat.vscode-yaml",
+    "streetsidesoftware.code-spell-checker",
+    "tamasfe.even-better-toml",
+    "trond-snekvik.simple-rst",
+    "usernamehw.errorlens",
+    "VisualStudioExptTeam.vscodeintellicode"
+  ],
+  "unwantedRecommendations": [
+    "bungcip.better-toml",
+    "ms-python.mypy-type-checker",
+    "ms-python.autopep8",
+    "ms-python.pylint",
+    "ms-python.isort",
+    "ms-python.black-formatter",
+    "ms-pyright.pyright"
+  ]
+}

@@ -1,0 +1,272 @@
+# Translation file for Deskmaid
+# Copyright (C) 2024 Dashstrom
+# This file is distributed under the same license as the PACKAGE package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Deskmaid 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-13 18:32+0200\n"
+"PO-Revision-Date: 2024-09-12 23:05+0200\n"
+"Last-Translator: Dashstrom <dashstrom.pro@gmail.com>\n"
+"Language: en\n"
+"Language-Team: English <dashstrom.pro@gmail.com>\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: deskmaid/cli.py:34
+msgid "show program's version number and exit"
+msgstr "show program's version number and exit"
+
+#: deskmaid/cli.py:39
+msgid "desired action to perform"
+msgstr "desired action to perform"
+
+#: deskmaid/cli.py:49
+msgid "verbose mode, enable INFO and DEBUG messages."
+msgstr "verbose mode, enable INFO and DEBUG messages."
+
+#: deskmaid/cli.py:58
+msgid "run deskmaid for clean your desktop."
+msgstr "run deskmaid for clean your desktop."
+
+#: deskmaid/cli.py:62 deskmaid/cli.py:90
+msgid "do not move files."
+msgstr "do not move files."
+
+#: deskmaid/cli.py:70
+msgid "recursive arrange."
+msgstr "recursive arrange."
+
+#: deskmaid/cli.py:78
+msgid "path to the directory to arrange."
+msgstr "path to the directory to arrange."
+
+#: deskmaid/cli.py:86
+msgid "undo the last run command."
+msgstr "undo the last run command."
+
+#: deskmaid/cli.py:100
+msgid "create shortcuts on desktop."
+msgstr "create shortcuts on desktop."
+
+#: deskmaid/cli.py:104
+msgid "show logs and wait before exit."
+msgstr "affiche les jouneaux et attend avant de quitter."
+
+#: deskmaid/cli.py:141
+msgid "No command specified"
+msgstr "No command specified"
+
+#: deskmaid/cli.py:143
+msgid "Unexpected error"
+msgstr "Unexpected error"
+
+#: deskmaid/cli.py:145
+#, python-format
+msgid "Please, report this error to %s."
+msgstr "Please, report this error to %s."
+
+#: deskmaid/config.py:73 deskmaid/config.py:88
+#, python-format
+msgid "Invalid type %(type)r for %(value)r"
+msgstr "Invalid type %(type)r for %(value)r"
+
+#: deskmaid/config.py:101
+#, python-format
+msgid "Move %s to %s"
+msgstr "Move %s to %s"
+
+#: deskmaid/config.py:108
+#, python-format
+msgid "Undo %s to %s"
+msgstr "Undo %s to %s"
+
+#: deskmaid/deskmaid.py:133
+msgid "At your command, senpai"
+msgstr "At your command, senpai"
+
+#: deskmaid/deskmaid.py:147
+#, python-format
+msgid "one files arranged"
+msgid_plural "%(num)d file arranged"
+msgstr[0] "one files arranged"
+msgstr[1] "%(num)d file arranged"
+
+#: deskmaid/deskmaid.py:154
+msgid ""
+"Oni-chan, everything is tidy\n"
+"It's just the two of us now\n"
+msgstr ""
+"Oni-chan, everything is tidy\n"
+"It's just the two of us now\n"
+
+#: deskmaid/deskmaid.py:189
+#, python-format
+msgid "Failed to send notification: %s"
+msgstr "Failed to send notification: %s"
+
+#: deskmaid/file.py:35
+#, python-format
+msgid "%(path)s is not a valid path"
+msgstr "%(path)s is not a valid path"
+
+#: deskmaid/info.py:17
+msgid "Configurable desktop cleaner."
+msgstr "Configurable desktop cleaner."
+
+#: argparse.py:296
+msgid "usage: "
+msgstr "usage: "
+
+#: argparse.py:860
+msgid ".__call__() not defined"
+msgstr ".__call__() not defined"
+
+#: argparse.py:1203
+#, python-format
+msgid "unknown parser %(parser_name)r (choices: %(choices)s)"
+msgstr "unknown parser %(parser_name)r (choices: %(choices)s)"
+
+#: argparse.py:1263
+#, python-format
+msgid "argument \"-\" with mode %r"
+msgstr "argument \"-\" with mode %r"
+
+#: argparse.py:1272
+#, python-format
+msgid "can't open '%(filename)s': %(error)s"
+msgstr "can't open '%(filename)s': %(error)s"
+
+#: argparse.py:1481
+#, python-format
+msgid "cannot merge actions - two groups are named %r"
+msgstr "cannot merge actions - two groups are named %r"
+
+#: argparse.py:1519
+msgid "'required' is an invalid argument for positionals"
+msgstr "'required' is an invalid argument for positionals"
+
+#: argparse.py:1541
+#, python-format
+msgid ""
+"invalid option string %(option)r: must start with a character "
+"%(prefix_chars)r"
+msgstr ""
+"invalid option string %(option)r: must start with a character "
+"%(prefix_chars)r"
+
+#: argparse.py:1559
+#, python-format
+msgid "dest= is required for options like %r"
+msgstr "dest= is required for options like %r"
+
+#: argparse.py:1576
+#, python-format
+msgid "invalid conflict_resolution value: %r"
+msgstr "invalid conflict_resolution value: %r"
+
+#: argparse.py:1596
+#, python-format
+msgid "conflicting option string: %s"
+msgid_plural "conflicting option strings: %s"
+msgstr[0] "conflicting option string: %s"
+msgstr[1] "conflicting option strings: %s"
+
+#: argparse.py:1660
+msgid "mutually exclusive arguments must be optional"
+msgstr "mutually exclusive arguments must be optional"
+
+#: argparse.py:1728
+msgid "positional arguments"
+msgstr "positional arguments"
+
+#: argparse.py:1729
+msgid "options"
+msgstr "options"
+
+#: argparse.py:1744
+msgid "show this help message and exit"
+msgstr "show this help message and exit"
+
+#: argparse.py:1775
+msgid "cannot have multiple subparser arguments"
+msgstr "cannot have multiple subparser arguments"
+
+#: argparse.py:1827 argparse.py:2338
+#, python-format
+msgid "unrecognized arguments: %s"
+msgstr "unrecognized arguments: %s"
+
+#: argparse.py:1928
+#, python-format
+msgid "not allowed with argument %s"
+msgstr "not allowed with argument %s"
+
+#: argparse.py:1974 argparse.py:1988
+#, python-format
+msgid "ignored explicit argument %r"
+msgstr "ignored explicit argument %r"
+
+#: argparse.py:2095
+#, python-format
+msgid "the following arguments are required: %s"
+msgstr "the following arguments are required: %s"
+
+#: argparse.py:2110
+#, python-format
+msgid "one of the arguments %s is required"
+msgstr "one of the arguments %s is required"
+
+#: argparse.py:2153
+msgid "expected one argument"
+msgstr "expected one argument"
+
+#: argparse.py:2154
+msgid "expected at most one argument"
+msgstr "expected at most one argument"
+
+#: argparse.py:2155
+msgid "expected at least one argument"
+msgstr "expected at least one argument"
+
+#: argparse.py:2159
+#, python-format
+msgid "expected %s argument"
+msgid_plural "expected %s arguments"
+msgstr[0] "expected %s argument"
+msgstr[1] "expected %s arguments"
+
+#: argparse.py:2217
+#, python-format
+msgid "ambiguous option: %(option)s could match %(matches)s"
+msgstr "ambiguous option: %(option)s could match %(matches)s"
+
+#: argparse.py:2281
+#, python-format
+msgid "unexpected option string: %s"
+msgstr "unexpected option string: %s"
+
+#: argparse.py:2478
+#, python-format
+msgid "%r is not callable"
+msgstr "%r is not callable"
+
+#: argparse.py:2495
+#, python-format
+msgid "invalid %(type)s value: %(value)r"
+msgstr "invalid %(type)s value: %(value)r"
+
+#: argparse.py:2506
+#, python-format
+msgid "invalid choice: %(value)r (choose from %(choices)s)"
+msgstr "invalid choice: %(value)r (choose from %(choices)s)"
+
+#: argparse.py:2582
+#, python-format
+msgid "%(prog)s: error: %(message)s\n"
+msgstr "%(prog)s: error: %(message)s\n"
+

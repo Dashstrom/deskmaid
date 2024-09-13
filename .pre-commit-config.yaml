@@ -1,0 +1,50 @@
+repos:
+  # https://github.com/pre-commit/pre-commit-hooks
+  - repo: local
+    hooks:
+    - id: trailing-whitespace
+      name: trim trailing whitespace
+      entry: poetry run trailing-whitespace-fixer
+      language: system
+      types: [text]
+      stages: [commit, push, manual]
+    - id: end-of-file-fixer
+      name: fix end of files
+      entry: poetry run end-of-file-fixer
+      language: system
+      types: [text]
+      stages: [commit, push, manual]
+    - id: check-yaml
+      name: check yaml
+      entry: poetry run check-yaml
+      language: system
+      types: [yaml]
+    - id: check-json
+      name: check json
+      entry: poetry run check-json
+      language: system
+      types: [json]
+      exclude: "^.vscode"
+    - id: check-toml
+      name: check toml
+      entry: poetry run check-toml
+      language: system
+      types: [toml]
+  # https://github.com/commitizen-tools/commitizen
+  - repo: local
+    hooks:
+    - id: commitizen
+      name: commitizen check
+      entry: poetry run cz check
+      args: [--allow-abort, --commit-msg-file]
+      stages: [commit-msg]
+      language: system
+  # https://github.com/astral-sh/ruff-pre-commit
+  - repo: local
+    hooks:
+    - id: poe-format
+      name: ruff linter, ruff formatter and mypy
+      entry: poetry run poe format
+      language: system
+      pass_filenames: false
+      types: [python]

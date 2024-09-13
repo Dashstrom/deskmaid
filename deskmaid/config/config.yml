@@ -1,0 +1,176 @@
+desktop: "{home}/Desktop"
+storage: "D:/Files"
+ignore:
+  extensions:
+    - lnk
+    - url
+    - sys
+    - bat
+    - ps1
+  files:
+    - cleaner.py
+    - rufus-4.5.exe
+title: "Deskmaid"
+app_icon:  "{root}/assets/thoru.ico"
+storage_icon: "{root}/assets/kanna.ico"
+history: "{home}/.cache/deskmaid/latest.jsonl"
+fallback: others
+filters:
+  videos:
+    extensions:
+      - webm
+      - mov
+      - mp4
+      - mpeg
+      - avi
+      - wmv
+      - DivX
+      - mkv
+      - h264
+      - flv
+  audios:
+    extensions:
+      - riff
+      - bwf
+      - raw
+      - caf
+      - aiff
+      - wav
+      - wma
+      - mp3
+      - ogg
+  projects:
+    extensions:
+      - ai
+      - xcf
+      - psd
+      - gpr
+  excel:
+    extensions:
+      - xlsx
+      - xls
+      - xlsm
+      - xlr
+      - xlc
+      - xltm
+      - xltx
+  images:
+    extensions:
+      - cur
+      - png
+      - jpeg
+      - avif
+      - jpg
+      - jpg_large
+      - svg
+      - ico
+      - gif
+      - bmp
+      - jpe
+      - webp
+      - jfif
+      - heic
+  archives:
+    extensions:
+      - whl
+      - torrent
+      - tar.bz2
+      - tar.gz
+      - tar.xz
+      - bz2
+      - rar
+      - gz
+      - tar
+      - tbz2
+      - tar
+      - zip
+      - xz
+      - 7z
+      - Z
+      - deb
+      - tgz
+      - whl
+  powerpoint:
+    extensions:
+      - pptx
+      - odp
+      - pps
+      - ppt
+  documents:
+    extensions:
+      - pdf
+      - odt
+      - docx
+      - doc
+      - latex
+  texts:
+    extensions:
+      - txt
+      - log
+      - md
+      - rst
+  font:
+    extensions:
+      - ttf
+      - otf
+      - woff
+  codes:
+    extensions:
+      - cpp
+      - psql
+      - asm
+      - kt
+      - css
+      - sql
+      - py
+      - java
+      - pyx
+      - c
+      - cpp
+      - asm
+      - class
+      - sql
+      - pqsl
+      - html
+      - s
+      - sh
+      - bat
+      - cc
+      - cs
+      - htm
+      - h
+      - jav
+      - js
+      - ts
+      - php
+      - go
+      - tpt
+      - ovpn
+      - ipynb
+  executables:
+    extensions:
+      - jar
+      - pyc
+      - msi
+      - exe
+      - iso
+      - so
+      - bin
+  data:
+    extensions:
+      - ics
+      - xml
+      - mbc
+      - tmx
+      - tsx
+      - pcap
+      - sav
+      - json
+      - yaml
+      - yml
+      - dat
+      - xsd
+      - csv
+      - crdownload
+      - gpkg
+      - dxf

@@ -1,0 +1,5 @@
+noqa
+fmt
+pragma
+doctest
+mypy

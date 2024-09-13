@@ -1,0 +1,484 @@
+# ----------------------------------------------------------------------
+# Packaging
+# https://packaging.python.org/en/latest/tutorials/packaging-projects
+# ----------------------------------------------------------------------
+
+[build-system]
+requires = ["poetry-core", "babel"]
+build-backend = "poetry.core.masonry.api"
+
+
+# ----------------------------------------------------------------------
+# peotry
+# https://python-poetry.org/docs/pyproject/
+# ----------------------------------------------------------------------
+
+[tool.poetry]
+name = "deskmaid"
+version = "2.0.0"
+description = "Configurable desktop cleaner."
+license = "MIT"
+authors = [
+  "Dashstrom <dashstrom.pro@gmail.com>"
+]
+maintainers  = [
+  "Dashstrom <dashstrom.pro@gmail.com>",
+]
+readme = "README.rst"
+homepage = "https://github.com/Dashstrom/deskmaid"
+repository = "https://github.com/Dashstrom/deskmaid"
+documentation = "https://dashstrom.github.io/deskmaid"
+keywords = [
+  "python",
+]
+
+# See https://pypi.org/classifiers/
+classifiers = [
+
+  #"Development Status :: 1 - Planning",
+  #"Development Status :: 2 - Pre-Alpha",
+  "Development Status :: 3 - Alpha",
+  #"Development Status :: 4 - Beta",
+  #"Development Status :: 5 - Production/Stable",
+  #"Development Status :: 6 - Mature",
+  #"Development Status :: 7 - Inactive",
+
+  # Default usage
+  "Environment :: Console",
+
+  # Framework used
+  "Framework :: Pytest",
+  "Framework :: Sphinx",
+  "Framework :: tox",
+
+  # Indicate who your project is intended for
+  "Intended Audience :: Developers",
+  "Intended Audience :: System Administrators",
+
+  # Target OS
+  "Operating System :: OS Independent",
+
+  # What is the language used in this project
+  "Natural Language :: English",
+
+  # Version available for this project
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3 :: Only",
+
+  # What is the language used in the project
+  "Natural Language :: English",
+
+
+  # License used in this project
+  "License :: OSI Approved :: MIT License",
+
+  # The project is typed
+  "Typing :: Typed"
+]
+packages = [
+  { include = "deskmaid" },
+]
+include = [
+  { path = "deskmaid/locale/**/*.mo", format="wheel" },
+]
+
+
+[tool.poetry.dependencies]
+python = ">=3.8"
+
+typing-extensions = ">=4.8.0"
+
+pytest = { version = "8.3.2", optional = true }
+pytest-mock = { version = "3.14.0", optional = true }
+coverage = { extras = ["toml"], version = "7.6.0", optional = true }
+pytest-cov = { version = "5.0.0", optional = true }
+mypy = { version = "1.11.1", optional = true }
+ruff = { version = "0.5.6", optional = true }
+pre-commit = { version = "3.5.0", optional = true }
+pre-commit-hooks = { version = "4.6.0", optional = true}
+sphinx = { version = "7.1.2", optional = true }
+sphinx-rtd-theme = { version = "2.0.0", optional = true }
+sphinxcontrib-mermaid = { version = "0.9.2", optional = true }
+poethepoet = { version = "0.27.0", optional = true }
+commitizen = { version = "3.28.0", optional = true }
+babel = { version = "2.16.0", optional = true }
+types-pyyaml = { version = "6.0.12.20240808", optional = true }
+types-pywin32 = { version = "^306.0.0.20240822", optional = true, markers = "os_name == 'nt'" }
+
+pyyaml = "*"
+plyer = "*"
+msgspec = "*"
+psutil = "*"
+pywin32 = { version = "*", markers = "os_name == 'nt'" }
+
+[tool.poetry.extras]
+test = ["pytest", "pytest-mock"]
+cov = ["pytest", "pytest-mock", "coverage", "pytest-cov"]
+lint = ["pytest", "pytest-mock", "mypy", "ruff"]
+format = ["pytest", "pytest-mock", "mypy", "ruff"]
+docs = ["sphinx", "sphinx-rtd-theme", "sphinxcontrib-mermaid"]
+tasks = ["poethepoet", "pre-commit", "commitizen", "pre-commit-hooks", "babel"]
+
+# https://www.carmenbianca.eu/en/post/2024-04-14-how-to-set-up-python-internationalisation-with-click-poetry-forgejo-and-weblate/
+[tool.poetry.build]
+generate-setup-file = false
+script = "_build.py"
+
+[tool.poetry.scripts]
+deskmaid = "deskmaid.cli:entrypoint"
+
+
+# ----------------------------------------------------------------------
+# Poe the Poet
+# https://poethepoet.natn.io/index.html
+# ----------------------------------------------------------------------
+
+[tool.poe.tasks.test]
+help = "Run test suite."
+cmd = "pytest"
+
+[tool.poe.tasks.lint]
+help = "Run linters: ruff checker and ruff formatter and mypy."
+sequence = [
+  { cmd = "ruff check ." },
+  { cmd = "ruff format --diff ." },
+  { cmd = "mypy ." },
+]
+ignore_fail = true
+
+[tool.poe.tasks.format]
+help = "Run linters in fix mode."
+sequence = [
+  { cmd = "ruff check --fix ." },
+  { cmd = "ruff format ." },
+  { cmd = "mypy ." },
+]
+ignore_fail = true
+
+[tool.poe.tasks.check]
+help = "Run all checks: lint, test and docs."
+sequence = [
+  { ref = "lint" },
+  { ref = "test" },
+  { ref = "docs" },
+]
+
+[tool.poe.tasks.check-tag]
+help = "Check if the current tag match the version."
+expr = """
+sys.exit(
+    subprocess.run(
+        ['git', 'describe', 'tag', '--abbrev=0'],
+        text=True,
+        stderr=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+    ).stdout
+    != 'v' + deskmaid.__version__
+  )
+"""
+imports = ["deskmaid", "subprocess", "os"]
+
+[tool.poe.tasks.cov]
+help = "Run coverage for generate report and html."
+sequence = [
+  { cmd = "coverage run -m pytest" },
+  { cmd = "coverage report" },
+  { cmd = "coverage html" },
+]
+
+[tool.poe.tasks.locale]
+help = "Compile locale and refresh .po and .mo files."
+
+# --output test.po .\deskmaid\
+[[tool.poe.tasks.locale.sequence]]
+expr = """
+subprocess.check_call(
+  [
+    'pybabel',
+    'extract',
+    '--project=deskmaid',
+    '--version=v0.0.1',
+    '--add-comments=TRANSLATORS',
+    '--copyright-holder=Dashstrom',
+    '--msgid-bugs-address=dashstrom.pro@gmail.com',
+    '--output=deskmaid/locale/messages.pot',
+    'deskmaid',
+    str(argparse.__file__),
+  ],
+  text=True,
+)
+"""
+imports = ["subprocess", "pathlib", "argparse"]
+
+[[tool.poe.tasks.locale.sequence]]
+expr = """
+pathlib.Path('deskmaid/locale/messages.pot').write_text(
+  pathlib.Path('deskmaid/locale/messages.pot').read_text()
+  .replace(
+    'charset=CHARSET',
+    'charset=utf-8'
+  )
+  .replace(
+    os.path.relpath(argparse.__file__, '.').replace('\\\\', '/'),
+    'argparse.py'
+  )
+)
+"""
+imports = ["pathlib", "argparse", "os"]
+
+[[tool.poe.tasks.locale.sequence]]
+cmd = "pybabel update -i deskmaid/locale/messages.pot -d deskmaid/locale"
+
+[[tool.poe.tasks.locale.sequence]]
+cmd = "pybabel compile -d deskmaid/locale"
+
+[tool.poe.tasks.open-cov]
+help = "Open html coverage report in webbrowser."
+deps = ["cov"]
+expr = "webbrowser.open('file:'+urllib.request.pathname2url(os.path.abspath('htmlcov/index.html')),new=2)"
+imports = ["os", "webbrowser", "sys", "urllib.request"]
+
+[tool.poe.tasks.docs]
+help = "Build documentation."
+cmd = "sphinx-build -W -b html docs public"
+
+[tool.poe.tasks.open-docs]
+help = "Open documentation in webbrowser."
+deps = ["docs"]
+expr = "webbrowser.open('file:'+urllib.request.pathname2url(os.path.abspath('public/index.html')),new=2)"
+imports = ["os", "webbrowser", "sys", "urllib.request"]
+
+[tool.poe.tasks.setup]
+help = "Setup pre-commit."
+cmd = "pre-commit install"
+
+[tool.poe.tasks.pre-commit]
+help = "Run pre-commit."
+cmd = "pre-commit run --all-files"
+
+[tool.poe.tasks.commit]
+help = "Test, commit and push."
+sequence = [
+  { ref = "check" },
+  { cmd = "git add ." },
+  { cmd = "cz c" },
+  { cmd = "git push" },
+]
+
+[tool.poe.tasks.clean]
+help = "Clean cache files."
+expr = """[
+  shutil.rmtree(path, ignore_errors=False)
+  if path.is_dir()
+  else path.unlink()
+  for pattern in [
+    'build/',
+    'dist/',
+    'public/',
+    '.eggs/',
+    '.tox/',
+    '.coverage',
+    'htmlcov/',
+    '.pytest_cache',
+    '.mypy_cache',
+    '.ruff_cache',
+    '**/*.egg-info',
+    '**/*.egg',
+    '**/__pycache__',
+    '**/*~',
+    '**/*.pyc',
+    '**/*.pyo',
+    '**/*.mo',
+  ]
+  for path in pathlib.Path().resolve().glob(pattern)
+]"""
+imports = ["shutil", "sys", "pathlib"]
+
+
+# ----------------------------------------------------------------------
+# Pytest
+# https://docs.pytest.org
+# ----------------------------------------------------------------------
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "INFO"
+addopts = "-vv --doctest-modules"
+doctest_optionflags = "DONT_ACCEPT_TRUE_FOR_1 NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL ELLIPSIS"
+#asyncio_mode = "auto"
+
+
+# ----------------------------------------------------------------------
+# Coverage
+# https://coverage.readthedocs.io/en/7.3.2/config.html
+# ----------------------------------------------------------------------
+
+[tool.coverage.run]
+source = ["deskmaid"]
+
+
+# ----------------------------------------------------------------------
+# Mypy
+# https://pypi.org/project/mypy
+# ----------------------------------------------------------------------
+
+[tool.mypy]
+python_version = 3.8
+exclude = [
+  ".bzr",
+  ".direnv",
+  ".eggs",
+  ".git",
+  ".hg",
+  ".mypy_cache",
+  ".nox",
+  ".pants.d",
+  ".pytype",
+  ".ruff_cache",
+  ".svn",
+  ".tox",
+  ".venv",
+  "__pypackages__",
+  "_build",
+  "buck-out",
+  "build",
+  "dist",
+  "node_modules",
+  "venv",
+]
+enable_error_code = ["ignore-without-code", "truthy-bool", "redundant-expr"]
+
+# Disallow dynamic typing
+disallow_any_unimported = false
+disallow_any_expr = false  # All attribut of argparse.Namespace are Any
+disallow_any_decorated = false  # Too many package doesn't have typed decorator
+disallow_any_generics = true
+disallow_subclassing_any = true
+
+# Disallow untyped definitions and calls
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = false  # Too many decorator are untyped
+
+# None and optional handling
+no_implicit_optional = true
+
+# Configuring warnings
+warn_unused_ignores = true
+warn_no_return = true
+warn_return_any = true
+warn_redundant_casts = true
+
+# Misc things
+strict_equality = true
+
+# Config file
+warn_unused_configs = true
+
+# Exemple for missing types
+[[tool.mypy.overrides]]
+module = ["plyer.*"]
+ignore_missing_imports = true
+
+
+# ----------------------------------------------------------------------
+# Ruff
+# https://pypi.org/project/ruff
+# ----------------------------------------------------------------------
+
+[tool.ruff]
+line-length = 79
+target-version = "py38"
+
+[tool.ruff.lint]
+select = ["ALL"]
+# D203 and D211 are incompatible
+# D212 and D213 are incompatible
+# D400 [*] First line should end with a period
+# D101 Missing docstring in public class
+# SIM117 multiple context managers is not available in 3.8
+# We dont use ANN : flake8-annotations because we already have mypy
+ignore = ["D203", "D213", "D400", "D101", "SIM117", "ANN", "COM812", "ISC001"]
+fixable = ["ALL"]
+unfixable = []
+exclude = [
+  ".bzr",
+  ".direnv",
+  ".eggs",
+  ".git",
+  ".hg",
+  ".mypy_cache",
+  ".nox",
+  ".pants.d",
+  ".pytype",
+  ".ruff_cache",
+  ".svn",
+  ".tox",
+  ".venv",
+  "__pypackages__",
+  "_build",
+  "buck-out",
+  "build",
+  "dist",
+  "node_modules",
+  "venv",
+]
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.per-file-ignores]
+# INP001 File `docs\conf.py` is part of an implicit namespace package. Add an `__init__.py`.
+# A001 Variable `copyright` is shadowing a python builtin
+# PTH100 `os.path.abspath()` should be replaced by `Path.resolve()`
+"docs/conf.py" = ["INP001", "A001", "PTH100"]
+# S101 Use of `assert` detected
+# S603 `subprocess` call: check for execution of untrusted input
+"tests/*.py" = ["S101", "S603"]
+# Q003 [*] Change outer quotes to avoid escaping inner quotes
+# E501 Line too long
+"*/info.py" = ["Q003", "E501"]
+# E501 Line too long
+"*/__main__.py" = ["E501"]
+# INP001 File `benchmarks/*.py` is part of an implicit namespace package. Add an `__init__.py`.
+"benchmarks/*.py" = ["INP001"]
+# INP001 File `scripts/*.py` is part of an implicit namespace package. Add an `__init__.py`.
+"scripts/*.py" = ["INP001"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["deskmaid"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.pyupgrade]
+# Preserve types, even if a file imports `from __future__ import annotations`.
+keep-runtime-typing = true
+
+[tool.ruff.lint.mccabe]
+# Unlike Flake8, default to a complexity level of 12.
+max-complexity = 12
+
+
+# ----------------------------------------------------------------------
+# Pylint
+# https://pylint.pycqa.org/en/latest/index.html
+# ----------------------------------------------------------------------
+
+# We dont use pylint, so we disabled it
+[tool.pylint.main]
+ignore-patterns = ["*"]
+
+
+# ----------------------------------------------------------------------
+# Black
+# https://black.readthedocs.io/en/stable/
+# ----------------------------------------------------------------------
+
+[tool.black]
+exclude="*"
