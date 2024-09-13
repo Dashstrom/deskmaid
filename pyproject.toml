@@ -172,16 +172,14 @@ sequence = [
 help = "Check if the current tag match the version."
 expr = """
 sys.exit(
-    subprocess.run(
-        ['git', 'describe', 'tag', '--abbrev=0'],
-        text=True,
-        stderr=subprocess.DEVNULL,
-        stdout=subprocess.PIPE,
-    ).stdout
-    != 'v' + deskmaid.__version__
+  subprocess.check_output(
+      ['git', 'describe', 'tag', '--abbrev=0'],
+      text=True,
   )
+  != 'v' + deskmaid.__version__
+)
 """
-imports = ["deskmaid", "subprocess", "os"]
+imports = ["deskmaid", "subprocess"]
 
 [tool.poe.tasks.cov]
 help = "Run coverage for generate report and html."
