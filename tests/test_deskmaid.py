@@ -44,7 +44,7 @@ def test_arrange(deskmaid: Deskmaid) -> None:
     desktop = deskmaid.config.desktop.render()
     (desktop / "test.txt").touch()
     (desktop / "test.csv").touch()
-    deskmaid.arrange()
+    deskmaid.organize()
     storage = deskmaid.config.storage.render()
     paths = list_files(storage)
     assert not list_files(desktop), "Some files are not arranged"
@@ -58,7 +58,7 @@ def test_undo(deskmaid: Deskmaid) -> None:
     (desktop / "test.csv").touch()
     (desktop / "test.lnk").touch()
     before = list_files(desktop)
-    deskmaid.arrange()
+    deskmaid.organize()
     deskmaid.config.storage.render()
     assert list_files(desktop) == {"test.lnk"}
     deskmaid.undo()

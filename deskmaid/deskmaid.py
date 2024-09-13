@@ -35,14 +35,14 @@ class Deskmaid:
         """Load config from path or default location."""
         return Deskmaid(Config.load(path, dry_run=dry_run))
 
-    def arrange(  # noqa: C901, PLR0912
+    def organize(  # noqa: C901, PLR0912
         self,
         *,
         path: Optional[PathLike] = None,
         recursive: Optional[bool] = None,
         dry_run: Optional[bool] = None,
     ) -> Dict[Path, Path]:
-        """Arrange all non-ignored files and return the moved file count."""
+        """Organize all non-ignored files and return the moved files."""
         if dry_run is None:
             dry_run = False
         if recursive is None:
@@ -75,28 +75,40 @@ class Deskmaid:
             history.parent.mkdir(parents=True, exist_ok=True)
             stream = history.open("wb")
 
-        # Find all files to move and there destinations
+        # Create mapping
         ignore_extensions = {
             ext.casefold() for ext in self.config.ignore.extensions
         }
+
+        # Find all files to move and there destinations
         files: Dict[Path, Path] = {}
         with stream:
+            # Iterate files with smallest files first
             for src in sorted(iterator, key=lambda p: p.stat().st_size):
+                # Keep only files
                 if not src.is_file():
                     continue
+
+                # Perform intelligent separation between stem and ext
                 _, ext = split_filename(src)
                 if ext.startswith("."):
                     ext = ext[1:]
+
+                # Apply filters
                 if src.name in self.config.ignore.files:
                     continue
                 if ext in ignore_extensions:
                     continue
+
+                # Find destination
                 directory = storage / mapping[ext]
                 dst = directory / src.name
 
                 # Deskmaid has been run on himself
                 if src == dst:
                     continue
+
+                # Move file and save it into history
                 move = Move(src=src, dst=self.rename(dst))
                 move.do(dry_run=dry_run)
                 if not dry_run:
@@ -133,7 +145,7 @@ class Deskmaid:
             + " (\u2044 \u2044•\u2044ω\u2044•\u2044 \u2044)"
         )
         try:
-            arranged = self.arrange(
+            arranged = self.organize(
                 path=path,
                 dry_run=dry_run,
                 recursive=recursive,
