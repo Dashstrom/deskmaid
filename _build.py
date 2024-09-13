@@ -1,11 +1,9 @@
 """Build package."""
 
-import logging
 from pathlib import Path
 
 import babel.messages.frontend
 
-logger = logging.getLogger(__name__)
 ROOT_DIR = Path(__file__).parent
 PO_DIR = ROOT_DIR / "deskmaid" / "locale"
 
