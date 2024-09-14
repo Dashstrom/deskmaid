@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deskmaid.deskmaid &mdash; deskmaid 2.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=e04da888"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+        <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            deskmaid
+          </a>
+              <div class="version">
+                2.0.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">deskmaid</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">deskmaid.deskmaid</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deskmaid.deskmaid</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Script for arrange desktop.</span>
+
+<span class="sd">Use `config.yml` for options</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shlex</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">IO</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">plyer</span> <span class="kn">import</span> <span class="n">notification</span>
+
+<span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">Move</span>
+<span class="kn">from</span> <span class="nn">.file</span> <span class="kn">import</span> <span class="n">PathLike</span><span class="p">,</span> <span class="n">split_filename</span><span class="p">,</span> <span class="n">to_path</span>
+<span class="kn">from</span> <span class="nn">.i18n</span> <span class="kn">import</span> <span class="n">gettext</span><span class="p">,</span> <span class="n">ngettext</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Deskmaid"><a class="viewcode-back" href="../../references.html#deskmaid.Deskmaid">[docs]</a><span class="k">class</span> <span class="nc">Deskmaid</span><span class="p">:</span>
+<div class="viewcode-block" id="Deskmaid.__init__"><a class="viewcode-back" href="../../references.html#deskmaid.Deskmaid.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instanciate deskmaid.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span></div>
+
+<div class="viewcode-block" id="Deskmaid.load"><a class="viewcode-back" href="../../references.html#deskmaid.Deskmaid.load">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span>
+        <span class="n">path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dry_run</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Deskmaid&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load config from path or default location.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Deskmaid</span><span class="p">(</span><span class="n">Config</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="n">dry_run</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Deskmaid.organize"><a class="viewcode-back" href="../../references.html#deskmaid.Deskmaid.organize">[docs]</a>    <span class="k">def</span> <span class="nf">organize</span><span class="p">(</span>  <span class="c1"># noqa: C901, PLR0912</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PathLike</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dry_run</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">Path</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Organize all non-ignored files and return the moved files.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">dry_run</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dry_run</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">recursive</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">recursive</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">desktop</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">to_path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">dry_run</span><span class="p">:</span>
+            <span class="n">storage</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Make fast mapping</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">fallback</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="n">extension</span><span class="o">.</span><span class="n">casefold</span><span class="p">():</span> <span class="n">name</span>
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="nb">filter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">filters</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>  <span class="c1"># noqa: A001</span>
+                <span class="k">for</span> <span class="n">extension</span> <span class="ow">in</span> <span class="nb">filter</span><span class="o">.</span><span class="n">extensions</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Support recursive</span>
+        <span class="n">iterator</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;**/*&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">recursive</span> <span class="k">else</span> <span class="n">target</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
+
+        <span class="c1"># Save all changes</span>
+        <span class="k">if</span> <span class="n">dry_run</span><span class="p">:</span>
+            <span class="n">stream</span><span class="p">:</span> <span class="n">IO</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">history</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+            <span class="n">history</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">stream</span> <span class="o">=</span> <span class="n">history</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;wb&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Create mapping</span>
+        <span class="n">ignore_extensions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">ext</span><span class="o">.</span><span class="n">casefold</span><span class="p">()</span> <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">ignore</span><span class="o">.</span><span class="n">extensions</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Find all files to move and there destinations</span>
+        <span class="n">files</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">with</span> <span class="n">stream</span><span class="p">:</span>
+            <span class="c1"># Iterate files with smallest files first</span>
+            <span class="k">for</span> <span class="n">src</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">iterator</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span><span class="p">):</span>
+                <span class="c1"># Keep only files</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">src</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># Perform intelligent separation between stem and ext</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_filename</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">ext</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
+                    <span class="n">ext</span> <span class="o">=</span> <span class="n">ext</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+                <span class="c1"># Apply filters</span>
+                <span class="k">if</span> <span class="n">src</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">ignore</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">ignore_extensions</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># Find destination</span>
+                <span class="n">directory</span> <span class="o">=</span> <span class="n">storage</span> <span class="o">/</span> <span class="n">mapping</span><span class="p">[</span><span class="n">ext</span><span class="p">]</span>
+                <span class="n">dst</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">/</span> <span class="n">src</span><span class="o">.</span><span class="n">name</span>
+
+                <span class="c1"># Deskmaid has been run on himself</span>
+                <span class="k">if</span> <span class="n">src</span> <span class="o">==</span> <span class="n">dst</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># Move file and save it into history</span>
+                <span class="n">move</span> <span class="o">=</span> <span class="n">Move</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">dst</span><span class="p">))</span>
+                <span class="n">move</span><span class="o">.</span><span class="n">do</span><span class="p">(</span><span class="n">dry_run</span><span class="o">=</span><span class="n">dry_run</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">dry_run</span><span class="p">:</span>
+                    <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">move</span><span class="o">.</span><span class="n">dump</span><span class="p">())</span>
+                <span class="n">files</span><span class="p">[</span><span class="n">src</span><span class="p">]</span> <span class="o">=</span> <span class="n">dst</span>
+        <span class="k">return</span> <span class="n">files</span></div>
+
+<div class="viewcode-block" id="Deskmaid.rename"><a class="viewcode-back" href="../../references.html#deskmaid.Deskmaid.rename">[docs]</a>    <span class="k">def</span> <span class="nf">rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fix filenames.&quot;&quot;&quot;</span>
+        <span class="c1"># CHeck if fix is required</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">path</span>
+
+        <span class="n">name</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_filename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="c1"># Iterate until find correct file</span>
+        <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">counter</span><span class="si">}</span><span class="s2">)</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="Deskmaid.clean"><a class="viewcode-back" href="../../references.html#deskmaid.Deskmaid.clean">[docs]</a>    <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PathLike</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dry_run</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run deskmaid.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span>
+            <span class="n">gettext</span><span class="p">(</span><span class="s2">&quot;At your command, senpai&quot;</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s2">&quot; (</span><span class="se">\u2044</span><span class="s2"> </span><span class="se">\u2044</span><span class="s2">•</span><span class="se">\u2044</span><span class="s2">ω</span><span class="se">\u2044</span><span class="s2">•</span><span class="se">\u2044</span><span class="s2"> </span><span class="se">\u2044</span><span class="s2">)&quot;</span>
+        <span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">arranged</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">organize</span><span class="p">(</span>
+                <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
+                <span class="n">dry_run</span><span class="o">=</span><span class="n">dry_run</span><span class="p">,</span>
+                <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">arranged</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span>
+                    <span class="n">ngettext</span><span class="p">(</span>
+                        <span class="s2">&quot;one files arranged&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;</span><span class="si">%(num)d</span><span class="s2"> file arranged&quot;</span><span class="p">,</span>
+                        <span class="nb">len</span><span class="p">(</span><span class="n">arranged</span><span class="p">),</span>
+                    <span class="p">)</span>
+                    <span class="o">%</span> <span class="p">{</span><span class="s2">&quot;num&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">arranged</span><span class="p">)}</span>
+                    <span class="o">+</span> <span class="s2">&quot; ଘ(੭ˊᵕˋ)੭* ੈ✩‧₊&quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span>
+                    <span class="n">gettext</span><span class="p">(</span>
+                        <span class="s2">&quot;Oni-chan, everything is tidy</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;It&#39;s just the two of us now</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+                    <span class="o">+</span> <span class="s2">&quot;(</span><span class="se">\u2044</span><span class="s2"> </span><span class="se">\u2044</span><span class="s2">&gt;</span><span class="se">\u2044</span><span class="s2"> ▽ </span><span class="se">\u2044</span><span class="s2">&lt;</span><span class="se">\u2044</span><span class="s2"> </span><span class="se">\u2044</span><span class="s2">)&quot;</span>
+                <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;An error was occurred&quot;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="n">err</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Deskmaid.undo"><a class="viewcode-back" href="../../references.html#deskmaid.Deskmaid.undo">[docs]</a>    <span class="k">def</span> <span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dry_run</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Undo last arrange.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">dry_run</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dry_run</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">history</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">history</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">history</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="n">move</span> <span class="o">=</span> <span class="n">Move</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="n">move</span><span class="o">.</span><span class="n">undo</span><span class="p">(</span><span class="n">dry_run</span><span class="o">=</span><span class="n">dry_run</span><span class="p">)</span>
+            <span class="n">history</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Deskmaid.notify"><a class="viewcode-back" href="../../references.html#deskmaid.Deskmaid.notify">[docs]</a>    <span class="k">def</span> <span class="nf">notify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send desktop notification.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">notification</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span>
+                <span class="n">title</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
+                <span class="n">app_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+                <span class="n">app_icon</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">app_icon</span><span class="o">.</span><span class="n">render</span><span class="p">()),</span>
+                <span class="n">ticker</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">NotImplementedError</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+                <span class="n">gettext</span><span class="p">(</span><span class="s2">&quot;Failed to send notification: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">),</span>
+                <span class="n">message</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    <span class="k">def</span> <span class="nf">_create_desktop_shortcut_windows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create shortcut on windows.&quot;&quot;&quot;</span>
+        <span class="c1"># Import API</span>
+
+        <span class="kn">from</span> <span class="nn">win32com.client</span> <span class="kn">import</span> <span class="n">CDispatch</span><span class="p">,</span> <span class="n">Dispatch</span>
+
+        <span class="c1"># Get desktop path</span>
+        <span class="n">desktop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">desktop</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+
+        <span class="c1"># Load API</span>
+        <span class="n">shell</span> <span class="o">=</span> <span class="n">Dispatch</span><span class="p">(</span><span class="s2">&quot;WScript.Shell&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Resolve path of executable</span>
+        <span class="n">python_exe</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">)</span>
+        <span class="n">pythonw_exe</span> <span class="o">=</span> <span class="n">python_exe</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;pythonw.exe&quot;</span>
+        <span class="k">if</span> <span class="n">pythonw_exe</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="n">python_exe</span> <span class="o">=</span> <span class="n">pythonw_exe</span>
+
+        <span class="c1"># Resolve current module name</span>
+        <span class="n">module_name</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="vm">__name__</span><span class="p">])[</span><span class="s2">&quot;__package__&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Create program shortcut</span>
+        <span class="n">shortcut_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">desktop</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">.lnk&quot;</span><span class="p">)</span>
+        <span class="n">lnk</span><span class="p">:</span> <span class="n">CDispatch</span> <span class="o">=</span> <span class="n">shell</span><span class="o">.</span><span class="n">CreateShortCut</span><span class="p">(</span><span class="n">shortcut_path</span><span class="p">)</span>
+        <span class="n">lnk</span><span class="o">.</span><span class="n">TargetPath</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">python_exe</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="s2">&quot;clean&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;-i&quot;</span><span class="p">)</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--dry-run&quot;</span><span class="p">)</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--verbose&quot;</span><span class="p">)</span>
+        <span class="n">lnk</span><span class="o">.</span><span class="n">Arguments</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">lnk</span><span class="o">.</span><span class="n">IconLocation</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">app_icon</span><span class="o">.</span><span class="n">render</span><span class="p">())</span>
+        <span class="n">lnk</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="c1"># Create directory shortcut</span>
+        <span class="n">shortcut_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">desktop</span> <span class="o">/</span> <span class="s2">&quot;Files.lnk&quot;</span><span class="p">)</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">shortcut_path</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">lnk</span> <span class="o">=</span> <span class="n">shell</span><span class="o">.</span><span class="n">CreateShortCut</span><span class="p">(</span><span class="n">shortcut_path</span><span class="p">)</span>
+        <span class="n">lnk</span><span class="o">.</span><span class="n">TargetPath</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">render</span><span class="p">())</span>
+        <span class="n">lnk</span><span class="o">.</span><span class="n">IconLocation</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_icon</span><span class="o">.</span><span class="n">render</span><span class="p">())</span>
+        <span class="n">lnk</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Deskmaid.shortcut"><a class="viewcode-back" href="../../references.html#deskmaid.Deskmaid.shortcut">[docs]</a>    <span class="k">def</span> <span class="nf">shortcut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debug</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create shortcut on desktop.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">debug</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;nt&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_create_desktop_shortcut_windows</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Dashstrom &lt;dashstrom.pro@gmail.com&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deskmaid &mdash; deskmaid 2.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=e04da888"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Documentation" href="references.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            deskmaid
+          </a>
+              <div class="version">
+                2.0.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">deskmaid</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Deskmaid</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="deskmaid">
+<h1>Deskmaid<a class="headerlink" href="#deskmaid" title="Permalink to this heading"></a></h1>
+<p><a class="reference external" href="https://github.com/Dashstrom/deskmaid/actions/workflows/docs.yml"><img alt="CI : Docs" src="https://github.com/Dashstrom/deskmaid/actions/workflows/docs.yml/badge.svg" /></a> <a class="reference external" href="https://github.com/Dashstrom/deskmaid/actions/workflows/lint.yml"><img alt="CI : Lint" src="https://github.com/Dashstrom/deskmaid/actions/workflows/lint.yml/badge.svg" /></a> <a class="reference external" href="https://github.com/Dashstrom/deskmaid/actions/workflows/tests.yml"><img alt="CI : Tests" src="https://github.com/Dashstrom/deskmaid/actions/workflows/tests.yml/badge.svg" /></a> <a class="reference external" href="https://pypi.org/project/deskmaid"><img alt="PyPI : deskmaid" src="https://img.shields.io/pypi/v/deskmaid.svg" /></a> <a class="reference external" href="https://pypi.org/project/deskmaid"><img alt="Python : versions" src="https://img.shields.io/pypi/pyversions/deskmaid.svg" /></a> <a class="reference external" href="https://dsc.gg/dashstrom"><img alt="Discord" src="https://img.shields.io/badge/Discord-dashstrom-5865F2?style=flat&amp;logo=discord&amp;logoColor=white" /></a> <a class="reference external" href="https://github.com/Dashstrom/deskmaid/blob/main/LICENSE"><img alt="License : MIT" src="https://img.shields.io/badge/license-MIT-green.svg" /></a></p>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h2>
+<p>Deskmaid is a configurable desktop cleaner.
+It scans your desktop and moves selected files to a folder, organizing them by file extension.
+Everything can be configured in <code class="code highlight bash docutils literal highlight-bash">~/.config/deskmaid/config.yml</code>.</p>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<p>You can install <code class="code highlight bash docutils literal highlight-bash">deskmaid</code> using <a class="reference external" href="https://pipx.pypa.io/stable/">pipx</a>
+from <a class="reference external" href="https://pypi.org/project">PyPI</a></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pipx
+pipx<span class="w"> </span>ensurepath
+pipx<span class="w"> </span>install<span class="w"> </span>deskmaid
+deskmaid<span class="w"> </span>shortcut
+</pre></div>
+</div>
+<p>This will install two shortcuts on your desktop:</p>
+<img alt="Two shortcuts, one with Thoru vacuuming and the other with Kanna opening her mouth wide, both people are from the anime Miss Kobayashi's Dragon Maid" src="https://raw.githubusercontent.com/Dashstrom/deskmaid/main/docs/resources/shortcuts.png" />
+</section>
+<section id="how-to-cancel-a-run">
+<h2>How to cancel a run ?<a class="headerlink" href="#how-to-cancel-a-run" title="Permalink to this heading"></a></h2>
+<p>Open shell then run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>deskmaid<span class="w"> </span>undo
+</pre></div>
+</div>
+</section>
+<section id="development">
+<h2>Development<a class="headerlink" href="#development" title="Permalink to this heading"></a></h2>
+<section id="contributing">
+<h3>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading"></a></h3>
+<p>Contributions are very welcome. Tests can be run with <code class="code highlight bash docutils literal highlight-bash">poe<span class="w"> </span>check</code>, please
+ensure the coverage at least stays the same before you submit a pull request.</p>
+</section>
+<section id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this heading"></a></h3>
+<p>You need to install <a class="reference external" href="https://python-poetry.org/docs/#installation">Poetry</a>
+and <a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Git</a>
+for work with this project.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Dashstrom/deskmaid
+<span class="nb">cd</span><span class="w"> </span>deskmaid
+poetry<span class="w"> </span>install<span class="w"> </span>--all-extras
+poetry<span class="w"> </span>run<span class="w"> </span>poe<span class="w"> </span>setup
+poetry<span class="w"> </span>shell
+</pre></div>
+</div>
+</section>
+<section id="poe">
+<h3>Poe<a class="headerlink" href="#poe" title="Permalink to this heading"></a></h3>
+<p>Poe is available for help you to run tasks.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>test           Run test suite.
+lint           Run linters: ruff checker and ruff formatter and mypy.
+format         Run linters in fix mode.
+check          Run all checks: lint, test and docs.
+check-tag      Check if the current tag match the version.
+cov            Run coverage for generate report and html.
+locale         Compile locale and refresh .po and .mo files.
+open-cov       Open html coverage report in webbrowser.
+docs           Build documentation.
+open-docs      Open documentation in webbrowser.
+setup          Setup pre-commit.
+pre-commit     Run pre-commit.
+commit         Test, commit and push.
+clean          Clean cache files.
+</pre></div>
+</div>
+</section>
+<section id="skip-commit-verification">
+<h3>Skip commit verification<a class="headerlink" href="#skip-commit-verification" title="Permalink to this heading"></a></h3>
+<p>If the linting is not successful, you can’t commit.
+For forcing the commit you can use the next command :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>commit<span class="w"> </span>--no-verify<span class="w"> </span>-m<span class="w"> </span><span class="s1">&#39;MESSAGE&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="commit-with-commitizen">
+<h3>Commit with commitizen<a class="headerlink" href="#commit-with-commitizen" title="Permalink to this heading"></a></h3>
+<p>To respect commit conventions, this repository uses
+<a class="reference external" href="https://github.com/commitizen-tools/commitizen?tab=readme-ov-file">Commitizen</a>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poe<span class="w"> </span>commit
+</pre></div>
+</div>
+</section>
+<section id="how-to-add-dependency">
+<h3>How to add dependency<a class="headerlink" href="#how-to-add-dependency" title="Permalink to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>add<span class="w"> </span><span class="s1">&#39;PACKAGE&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="ignore-illegitimate-warnings">
+<h3>Ignore illegitimate warnings<a class="headerlink" href="#ignore-illegitimate-warnings" title="Permalink to this heading"></a></h3>
+<p>To ignore illegitimate warnings you can add :</p>
+<ul class="simple">
+<li><p><strong># noqa: ERROR_CODE</strong> on the same line for ruff.</p></li>
+<li><p><strong># type: ignore[ERROR_CODE]</strong> on the same line for mypy.</p></li>
+<li><p><strong># pragma: no cover</strong> on the same line to ignore line for coverage.</p></li>
+<li><p><strong># doctest: +SKIP</strong> on the same line for doctest.</p></li>
+</ul>
+</section>
+</section>
+<section id="uninstall">
+<h2>Uninstall<a class="headerlink" href="#uninstall" title="Permalink to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pipx<span class="w"> </span>uninstall<span class="w"> </span>deskmaid
+</pre></div>
+</div>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this heading"></a></h2>
+<p>This work is licensed under <a class="reference external" href="https://github.com/Dashstrom/deskmaid/blob/main/LICENSE">MIT</a>.</p>
+</section>
+<section id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="references.html#deskmaid.entrypoint"><code class="docutils literal notranslate"><span class="pre">entrypoint()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="references.html#deskmaid.Deskmaid"><code class="docutils literal notranslate"><span class="pre">Deskmaid</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="references.html#deskmaid.Deskmaid.__init__"><code class="docutils literal notranslate"><span class="pre">Deskmaid.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="references.html#deskmaid.Deskmaid.load"><code class="docutils literal notranslate"><span class="pre">Deskmaid.load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="references.html#deskmaid.Deskmaid.organize"><code class="docutils literal notranslate"><span class="pre">Deskmaid.organize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="references.html#deskmaid.Deskmaid.rename"><code class="docutils literal notranslate"><span class="pre">Deskmaid.rename()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="references.html#deskmaid.Deskmaid.clean"><code class="docutils literal notranslate"><span class="pre">Deskmaid.clean()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="references.html#deskmaid.Deskmaid.undo"><code class="docutils literal notranslate"><span class="pre">Deskmaid.undo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="references.html#deskmaid.Deskmaid.notify"><code class="docutils literal notranslate"><span class="pre">Deskmaid.notify()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="references.html#deskmaid.Deskmaid.shortcut"><code class="docutils literal notranslate"><span class="pre">Deskmaid.shortcut()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="index">
+<h2>Index<a class="headerlink" href="#index" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="references.html" class="btn btn-neutral float-right" title="API Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Dashstrom &lt;dashstrom.pro@gmail.com&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
