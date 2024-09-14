@@ -15,7 +15,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "deskmaid"
-version = "2.0.0"
+version = "2.0.1"
 description = "Configurable desktop cleaner."
 license = "MIT"
 authors = [
@@ -115,6 +115,7 @@ types-pywin32 = { version = "306.0.0.20240822", optional = true }
 
 plyer = "*"
 msgspec = "*"
+pyyaml = "*"
 psutil = "*"
 pywin32 = { version = "*", markers = "sys_platform == 'win32'" }
 
