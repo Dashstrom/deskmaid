@@ -15,7 +15,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "deskmaid"
-version = "2.0.1"
+version = "2.0.2"
 description = "Configurable desktop cleaner."
 license = "MIT"
 authors = [

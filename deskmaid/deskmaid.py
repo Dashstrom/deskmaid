@@ -228,7 +228,7 @@ class Deskmaid:
         shortcut_path = str(desktop / f"{self.config.title}.lnk")
         lnk: CDispatch = shell.CreateShortCut(shortcut_path)
         lnk.TargetPath = str(python_exe)
-        args = ["-m", module_name, "run"]
+        args = ["-m", module_name, "clean"]
         if debug:
             args.insert(0, "-i")
             args.append("--dry-run")
